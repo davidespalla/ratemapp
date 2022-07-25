@@ -8,7 +8,7 @@ ui <- fluidPage(
 )
 
 server <- function(input,output,session){
-  selcted_cell <- reactiveVal(1)
+  selcted_cell <- reactiveVal(1) 
 
 
   x <- seq(0,100,0.5)
