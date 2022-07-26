@@ -2,15 +2,32 @@ library(shiny)
 library(ggplot2)
 
 ui <- fluidPage(
-  selectInput('selected_cell','cell number',choices = c(1:10)),
-  plotOutput('tuning_curve',width = '400px'),
-  verbatimTextOutput('text')
-)
+  
+  #title panel of the page
+  titlePanel("Wellcome to ratemapp"),
+
+  # builds a sidebar layout
+  sidebarLayout(
+    #populate sidebar panel
+    sidebarPanel(
+      selectInput('selected_cell','Select a cell',choices = c(1:10))
+    ), # end side panel
+    
+    #populate main panel
+    mainPanel(
+      verbatimTextOutput('text'),
+      plotOutput('tuning_curve',width = '600px')
+    ) # end main panel
+    
+  ) # end sidebar layout
+  
+) # end ui
 
 server <- function(input,output,session){
-  selcted_cell <- reactiveVal(1) 
+  # read input 
+  selected_cell <- reactive(input$selected_cell)
 
-
+  # generate data
   x <- seq(0,100,0.5)
   s <- 10
   n_cells <- 10
@@ -21,26 +38,12 @@ server <- function(input,output,session){
   for(i in seq(1,n_cells)){
     tuning_matrix[i,] <- dnorm(x,m[i],s)
   }
-  output$text <- renderPrint('prova') #selcted_cell(input$selected_cell)
-  output$tuning_curve <- renderPlot(plot(x,tuning_matrix[1,]),res=96)
+  
+  # build outputs
+  output$text <- renderPrint(selected_cell()) #selcted_cell(input$selected_cell)
+  output$tuning_curve <- renderPlot(plot(x,tuning_matrix[as.integer(selected_cell()),]),res=96)
 }
 
-# df <- data.frame(x=rnorm(100),y=rnorm(100))
-# ui <- fluidPage(
-#   plotOutput('plot',click='plot_click')
-# )
-# 
-# server <- funtion(input,output,session){
-#   dist <- reactiveVal(rep(1,nrow(df)))
-#   observeEvent(input$plot_click,
-#                {dist(nearPoints(df,input$plot_click, allRows = T,addDist = T)$dist_)}
-#   )
-#   output$plot <- renderPlot({
-#     df$dist <- dist()
-#     
-#     ggplot(df, aes(x, y, size = dist)) + geom_point() + scale_size_area(limits=c(0,1000),max_size=10,guide=NULL)
-#   }, res = 96)
-# }
 
 
 shinyApp(ui,server)
