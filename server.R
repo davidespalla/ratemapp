@@ -42,20 +42,20 @@ server <- function(input,output,session){
   })
   
   # read selected cell
-  selected_cell = reactive(input$cell_selector)
-  
-  
+  selected_cell <- reactive(input$cell_selector)
+  n_bins <- reactive(input$bin_selector)
   
   
   tuning_curve <- reactive({
     req(input$file_bh)
     req(input$file_spikes)
+    
     bh_df_ <- bh_df()
     spikes_df_ <- spike_df()
     selected_cell_ <- as.integer(selected_cell())
     
     tuning_curve_ <- build_tuning_curve(bh_df_,spikes_df_,
-                                        cell_n=selected_cell_,bin_size=0.1)
+                                        cell_n=selected_cell_,n_bins=n_bins())
     return(tuning_curve_)
   })
   

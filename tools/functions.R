@@ -1,5 +1,5 @@
-build_tuning_curve <- function(behaviour_df,spikes_df,cell_n=1,bin_size=0.1) {
-  n_bins <- as.integer(1./bin_size)
+build_tuning_curve <- function(behaviour_df,spikes_df,cell_n=1,n_bins=10) {
+  #n_bins <- as.integer(1./bin_size)
   filt_bh <-subset(behaviour_df,behaviour_df$x>0 & behaviour_df$x<1) # change with given range
   
   #occupancy histogram

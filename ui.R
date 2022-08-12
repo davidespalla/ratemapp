@@ -19,7 +19,13 @@ ui <- fluidPage(
                            "text/comma-separated-values,text/plain",
                            ".csv")),
       conditionalPanel("output.fileUploaded",
-      selectInput('cell_selector','Select cell',choices = c(1:10))
+      selectInput('cell_selector','Select cell',choices = c(1:10)),
+      numericInput('bin_selector','Number of bins',10,
+                    min = 1,
+                    max = 1000,
+                    step = 1
+                  
+      )
       ) #end conditional panel
     ), # end side panel
     
