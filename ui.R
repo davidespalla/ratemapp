@@ -7,6 +7,8 @@ ui <- fluidPage(
   sidebarLayout(
     #populate sidebar panel
     sidebarPanel(
+      titlePanel("Load data"),
+      
       fileInput("file_spikes", "Choose spikes file",
                 multiple = FALSE,
                 accept = c("text/csv",
@@ -18,21 +20,26 @@ ui <- fluidPage(
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
                            ".csv")),
+      
       conditionalPanel("output.fileUploaded",
-      selectInput('cell_selector','Select cell',choices = c(1:10)),
-      numericInput('bin_selector','Number of bins',10,
-                    min = 1,
-                    max = 1000,
-                    step = 1
-                  
-      )
+                       
+        titlePanel("Control panel"),
+        
+        selectInput('cell_selector','Select cell',choices = c(1:10)),
+        
+        numericInput('bin_selector','Number of bins',10,
+                      min = 1,
+                      max = 1000,
+                      step = 1
+                    
+        )
       ) #end conditional panel
     ), # end side panel
     
     #populate main panel
     mainPanel(
       verbatimTextOutput('text'),
-      plotOutput('tuning_curve',width = '600px')
+      plotOutput('tuning_curve',width = '1000px')
       
     ) # end main panel
     
