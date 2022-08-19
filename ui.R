@@ -32,14 +32,20 @@ ui <- fluidPage(
                       max = 1000,
                       step = 1
                     
-        )
+        ),
+        
+        sliderInput('smooth_selector','Smoothing',
+                    min=0.1,
+                    max=1,
+                    value = 0.3,
+                    step=0.01)
       ) #end conditional panel
     ), # end side panel
     
     #populate main panel
     mainPanel(
-      verbatimTextOutput('text'),
-      plotOutput('tuning_curve',width = '1000px')
+      titlePanel('Tuning Curve'),
+      plotOutput('tuning_curve',width = '800px')
       
     ) # end main panel
     

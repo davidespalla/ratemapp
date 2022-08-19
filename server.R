@@ -8,10 +8,7 @@ server <- function(input,output,session){
   # read behaviour file
   bh_df = reactive({
     req(input$file_bh)
-    
-    df <- read.csv(input$file_bh$datapath,header=FALSE)
-    colnames(df) <- c('t','x')
-    
+    df <- read.csv(input$file_bh$datapath,header=TRUE)
     
     return(df)
   })
@@ -20,13 +17,13 @@ server <- function(input,output,session){
   spike_df = reactive({
     req(input$file_spikes)
     
-    df <- read.csv(input$file_spikes$datapath,header=FALSE)
+    df <- read.csv(input$file_spikes$datapath,header=TRUE)
     
     return(df)
   })
   
   output$fileUploaded <- reactive({
-    both_uploaded <- !is.null(spike_df()) & !is.null(spike_df())
+    both_uploaded <- !is.null(spike_df()) & !is.null(bh_df())
     return(both_uploaded)
   })
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
@@ -36,7 +33,7 @@ server <- function(input,output,session){
     req(input$file_bh)
     updateSelectInput(session, "cell_selector",
                     label = "Select cell",
-                    choices = c(1:nrow(spike_df())),
+                    choices = c(1:ncol(spike_df())),
                     selected = 1
   )
   })
@@ -60,9 +57,9 @@ server <- function(input,output,session){
   })
   
   # build outputs
-  output$text <- renderPrint(tuning_curve()) #selcted_cell(input$selected_cell)
+  #output$text <- renderPrint(input$smooth_selector)
   #output$position_plot <- renderPlot(plot(t(),pos()),res=96)
   #output$tuning_curve <- renderPlot(plot(x,tuning_matrix[as.integer(selected_cell()),]),res=96)
-  output$tuning_curve <- renderPlot(plot(tuning_curve()$x,tuning_curve()$y),res=96)
+  output$tuning_curve <- renderPlot(plot_tuning_curve(tuning_curve(),input$smooth_selector),res=96)
   
 }
