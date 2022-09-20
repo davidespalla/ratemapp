@@ -1,5 +1,6 @@
 
 source("tools/functions.R")
+source("server_modules.R")
 
 server <- function(input,output,session){
   
@@ -28,38 +29,10 @@ server <- function(input,output,session){
   })
   outputOptions(output, 'fileUploaded', suspendWhenHidden=FALSE)
   
-  observe({
-    req(input$file_spikes)
-    req(input$file_bh)
-    updateSelectInput(session, "cell_selector",
-                    label = "Select cell",
-                    choices = c(1:ncol(spike_df())),
-                    selected = 1
-  )
-  })
+  #behaviour panel
+  behaviourServer('behaviour_ui',bh_df)
   
-  # read selected cell
-  selected_cell <- reactive(input$cell_selector)
-  n_bins <- reactive(input$bin_selector)
-  
-  
-  tuning_curve <- reactive({
-    req(input$file_bh)
-    req(input$file_spikes)
-    
-    bh_df_ <- bh_df()
-    spikes_df_ <- spike_df()
-    selected_cell_ <- as.integer(selected_cell())
-    
-    tuning_curve_ <- build_tuning_curve(bh_df_,spikes_df_,
-                                        cell_n=selected_cell_,n_bins=n_bins())
-    return(tuning_curve_)
-  })
-  
-  # build outputs
-  #output$text <- renderPrint(input$smooth_selector)
-  #output$position_plot <- renderPlot(plot(t(),pos()),res=96)
-  #output$tuning_curve <- renderPlot(plot(x,tuning_matrix[as.integer(selected_cell()),]),res=96)
-  output$tuning_curve <- renderPlot(plot_tuning_curve(tuning_curve(),input$smooth_selector),res=96)
+  #tuning curve panel
+  tuning_curveServer('tuning_curve',bh_df,spike_df)
   
 }
