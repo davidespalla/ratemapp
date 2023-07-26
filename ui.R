@@ -1,7 +1,9 @@
+source("ui_modules.R")
+
 ui <- fluidPage(
   
   #title panel of the page
-  titlePanel("Wellcome to ratemapp"),
+  titlePanel("RatemApp"),
   
   # builds a sidebar layout
   sidebarLayout(
@@ -21,31 +23,16 @@ ui <- fluidPage(
                            "text/comma-separated-values,text/plain",
                            ".csv")),
       
-      conditionalPanel("output.fileUploaded",
-                       
-        titlePanel("Control panel"),
-        
-        selectInput('cell_selector','Select cell',choices = c(1:10)),
-        
-        numericInput('bin_selector','Number of bins',10,
-                      min = 1,
-                      max = 1000,
-                      step = 1
-                    
-        ),
-        
-        sliderInput('smooth_selector','Smoothing',
-                    min=0.1,
-                    max=1,
-                    value = 0.3,
-                    step=0.01)
-      ) #end conditional panel
+      
     ), # end side panel
     
     #populate main panel
     mainPanel(
-      titlePanel('Tuning Curve'),
-      plotOutput('tuning_curve',width = '800px')
+
+      conditionalPanel("output.fileUploaded",
+                       behaviourUI('behaviour_ui'),
+                       tuning_curveUI('tuning_curve')
+      )
       
     ) # end main panel
     
